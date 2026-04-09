@@ -4,6 +4,11 @@ let guessCount = 0;
 let totalWins = 0;
 let totalGuesses = 0;
 let scores = [];
+let timerInterval;
+let seconds = 0;
+let startTime; 
+let times = []; // Array to store all completion times
+let fastestTime = Infinity; 
 
 //Player Name
 let playerName = prompt("Enter your name:","enter name here");
@@ -19,6 +24,15 @@ document.getElementById("playBtn").addEventListener("click", function(){
             range = parseInt(radios[i].value);
         }
     }
+startTime = new Date().getTime(); // Records current time in milliseconds
+seconds = 0; // Reset seconds for the display
+
+// Keep your setInterval here to update the display every second
+clearInterval(timerInterval);
+timerInterval = setInterval(function() {
+    seconds++;
+    document.getElementById("avgTime").textContent = "Time: " + seconds + "s";
+}, 1000);
 
 //round setup
 answer = Math.floor(Math.random() * range) + 1;
@@ -100,7 +114,29 @@ function updateScore(score){
     document.getElementById("wins").textContent = "Total wins: " + totalWins;
     document.getElementById("avgScore").textContent = "Average score: " + (totalGuesses / totalWins).toFixed(1);
 
+//     Elapsed Time
+    let endTime = new Date().getTime();
+    let elapsedSeconds = Math.floor((endTime - startTime) / 1000);
+    times.push(elapsedSeconds);
 
+    // 2. Update Fastest Time
+    if (elapsedSeconds < fastestTime) {
+        fastestTime = elapsedSeconds;
+    }
+  // STOP THE TIMER HERE
+    clearInterval(timerInterval);
+
+    document.getElementById("guessBtn").disabled = true;
+    document.getElementById("giveUpBtn").disabled = true;
+    document.getElementById("playBtn").disabled = false;
+
+    let levelRadios = document.getElementsByName("level");
+    for(let i=0; i < levelRadios.length; i++){
+        levelRadios[i].disabled = false;
+    }
+    // 3. Calculate Average Time
+    let totalTime = times.reduce((a, b) => a + b, 0);
+    let avgTime = (totalTime / times.length).toFixed(1);
     //update leaderboard
     scores.push(score);
     scores.sort(function(a,b){return a-b;});
@@ -114,6 +150,8 @@ function updateScore(score){
             leaderboard[i].textContent = "--";
         }
     }
+        document.getElementById("fastest").textContent = "Fastest Game: " + fastestTime + "s";
+    document.getElementById("avgTime").textContent = "Average Time: " + avgTime + "s";
 }
 
 function resetButtons(){
@@ -130,3 +168,11 @@ function resetButtons(){
 
 
 }
+
+
+//give up 
+document.getElementById("giveUpBtn").addEventListener("click", function() {
+    clearInterval(timerInterval);
+    document.getElementById("msg").textContent = "The answer was " + answer + ". Better luck next time!";
+    resetButtons();
+});
