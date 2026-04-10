@@ -2,7 +2,6 @@
 let answer = 0;
 let guessCount = 0;
 let totalWins = 0;
-let totalGuesses = 0;
 let scores = [];
 let times = [];
 let fastestTime = Infinity;
@@ -57,6 +56,12 @@ setInterval(function () {
   document.getElementById("date").textContent = time();
 }, 1000);
 
+// Start leaderboard as empty
+let leaderboardItems = document.getElementsByName("leaderboard");
+for (let i = 0; i < leaderboardItems.length; i++) {
+  leaderboardItems[i].textContent = "--";
+}
+
 function play() {
   let radios = document.getElementsByName("level");
   let range = 3;
@@ -108,15 +113,8 @@ function makeGuess() {
 
   if (num === answer) {
     totalWins++;
-    totalGuesses += guessCount;
-
     document.getElementById("msg").textContent =
       "Correct! " + playerName + " got it in " + guessCount + " guesses!";
-
-    document.getElementById("wins").textContent = "Total wins: " + totalWins;
-    document.getElementById("avgScore").textContent =
-      "Average Score: " + (totalGuesses / totalWins).toFixed(1);
-
     updateScore(guessCount);
     updateTimers(new Date().getTime());
     reset();
@@ -132,6 +130,17 @@ function updateScore(score) {
   scores.sort(function (a, b) {
     return a - b;
   });
+
+  document.getElementById("wins").textContent = "Total wins: " + totalWins;
+
+  let totalScore = 0;
+  for (let i = 0; i < scores.length; i++) {
+    totalScore += scores[i];
+  }
+
+  let avgScore = totalScore / scores.length;
+  document.getElementById("avgScore").textContent =
+    "Average Score: " + avgScore.toFixed(1);
 
   let leaderboard = document.getElementsByName("leaderboard");
   for (let i = 0; i < leaderboard.length; i++) {
