@@ -15,15 +15,14 @@ playerName =
   playerName.charAt(0).toUpperCase() +
   playerName.slice(1).toLowerCase();
 
-alert("Hello, " + playerName + ". Good luck guessing ;)");
+alert("Hello, " + playerName + ". Goodluck guessing ;)");
 
-// Month names
+// Month Names
 let monthNames = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
 
-// Day suffix
 function daySuffix(day) {
   if (day >= 11 && day <= 13) return day + "th";
   let last = day % 10;
@@ -33,7 +32,6 @@ function daySuffix(day) {
   return day + "th";
 }
 
-// Live date/time
 function time() {
   let now = new Date();
   let month = monthNames[now.getMonth()];
@@ -53,29 +51,29 @@ function time() {
   return month + " " + day + ", " + year + " · " + h + ":" + mm + ":" + ss + " " + ampm;
 }
 
-// Show date immediately and update every second
+// Live Date/Time
 document.getElementById("date").textContent = time();
 setInterval(function () {
   document.getElementById("date").textContent = time();
 }, 1000);
 
-// Start game
 function play() {
   let radios = document.getElementsByName("level");
-  currentRange = 3;
+  let range = 3;
 
   for (let i = 0; i < radios.length; i++) {
     if (radios[i].checked) {
-      currentRange = parseInt(radios[i].value);
+      range = parseInt(radios[i].value);
     }
   }
 
-  answer = Math.floor(Math.random() * currentRange) + 1;
+  currentRange = range;
+  answer = Math.floor(Math.random() * range) + 1;
   guessCount = 0;
   startTime = new Date().getTime();
 
   document.getElementById("msg").textContent =
-    playerName + ", guess a number between 1 and " + currentRange;
+    playerName + ", guess a number between 1 and " + range;
   document.getElementById("guess").value = "";
 
   document.getElementById("guessBtn").disabled = false;
@@ -87,7 +85,6 @@ function play() {
   }
 }
 
-// Guess logic
 function makeGuess() {
   let input = document.getElementById("guess").value;
   let num = parseInt(input);
@@ -110,9 +107,16 @@ function makeGuess() {
   }
 
   if (num === answer) {
+    totalWins++;
+    totalGuesses += guessCount;
+
     document.getElementById("msg").textContent =
       "Correct! " + playerName + " got it in " + guessCount + " guesses!";
-    totalWins++;
+
+    document.getElementById("wins").textContent = "Total wins: " + totalWins;
+    document.getElementById("avgScore").textContent =
+      "Average Score: " + (totalGuesses / totalWins).toFixed(1);
+
     updateScore(guessCount);
     updateTimers(new Date().getTime());
     reset();
@@ -123,17 +127,11 @@ function makeGuess() {
   }
 }
 
-// Update score stats + leaderboard
 function updateScore(score) {
-  totalGuesses += score;
   scores.push(score);
   scores.sort(function (a, b) {
     return a - b;
   });
-
-  document.getElementById("wins").textContent = "Total wins: " + totalWins;
-  document.getElementById("avgScore").textContent =
-    "Average Score: " + (totalGuesses / totalWins).toFixed(1);
 
   let leaderboard = document.getElementsByName("leaderboard");
   for (let i = 0; i < leaderboard.length; i++) {
@@ -145,7 +143,6 @@ function updateScore(score) {
   }
 }
 
-// Update fastest and average time
 function updateTimers(endMs) {
   let timeTaken = (endMs - startTime) / 1000;
   times.push(timeTaken);
@@ -154,9 +151,10 @@ function updateTimers(endMs) {
     fastestTime = timeTaken;
   }
 
-  let totalTime = times.reduce(function (a, b) {
-    return a + b;
-  }, 0);
+  let totalTime = 0;
+  for (let i = 0; i < times.length; i++) {
+    totalTime += times[i];
+  }
 
   let avgTime = totalTime / times.length;
 
@@ -166,7 +164,6 @@ function updateTimers(endMs) {
     "Average Time: " + avgTime.toFixed(1) + "s";
 }
 
-// Reset after round ends
 function reset() {
   document.getElementById("guessBtn").disabled = true;
   document.getElementById("giveUpBtn").disabled = true;
@@ -178,7 +175,6 @@ function reset() {
   }
 }
 
-// Give up
 function giveUp() {
   document.getElementById("msg").textContent =
     "The answer was " + answer + ". Better luck next time!";
@@ -188,7 +184,6 @@ function giveUp() {
   reset();
 }
 
-// Event listeners
 document.getElementById("playBtn").addEventListener("click", play);
 document.getElementById("guessBtn").addEventListener("click", makeGuess);
 document.getElementById("giveUpBtn").addEventListener("click", giveUp);
