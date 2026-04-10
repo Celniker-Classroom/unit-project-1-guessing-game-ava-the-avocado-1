@@ -177,9 +177,9 @@ function reset() {
 function giveUp() {
   let endTime = new Date().getTime();
   document.getElementById("msg").textContent =
-    "You gave up, " + playerName + ". The answer was " + answer + ". 😔";
-
-  updateScore(currentRange);
+    "You gave up, " + playerName + ". The answer was " + answer + ".";
+  totalWins++;
+  totalWinGuesses += currentRange;  updateScore(currentRange);
   updateTimers(endTime);
   reset();
 }
