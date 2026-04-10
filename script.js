@@ -2,6 +2,7 @@
 let answer = 0;
 let guessCount = 0;
 let totalWins = 0;
+let totalWinGuesses = 0;
 let scores = [];
 let times = [];
 let fastestTime = Infinity;
@@ -13,8 +14,6 @@ let playerName = prompt("Enter your name:", "enter name here") || "Player";
 playerName =
   playerName.charAt(0).toUpperCase() +
   playerName.slice(1).toLowerCase();
-
-alert("Hello, " + playerName + ". Goodluck guessing ;)");
 
 // Month Names
 let monthNames = [
@@ -50,37 +49,28 @@ function time() {
   return month + " " + day + ", " + year + " · " + h + ":" + mm + ":" + ss + " " + ampm;
 }
 
-// Live Date/Time
 document.getElementById("date").textContent = time();
 setInterval(function () {
   document.getElementById("date").textContent = time();
 }, 1000);
 
-// Start leaderboard as empty
-let leaderboardItems = document.getElementsByName("leaderboard");
-for (let i = 0; i < leaderboardItems.length; i++) {
-  leaderboardItems[i].textContent = "--";
-}
-
 function play() {
   let radios = document.getElementsByName("level");
-  let range = 3;
+  currentRange = 3;
 
   for (let i = 0; i < radios.length; i++) {
     if (radios[i].checked) {
-      range = parseInt(radios[i].value);
+      currentRange = parseInt(radios[i].value);
     }
   }
 
-  currentRange = range;
-  answer = Math.floor(Math.random() * range) + 1;
+  answer = Math.floor(Math.random() * currentRange) + 1;
   guessCount = 0;
   startTime = new Date().getTime();
 
   document.getElementById("msg").textContent =
-    playerName + ", guess a number between 1 and " + range;
+    playerName + ", guess a number between 1 and " + currentRange;
   document.getElementById("guess").value = "";
-
   document.getElementById("guessBtn").disabled = false;
   document.getElementById("giveUpBtn").disabled = false;
   document.getElementById("playBtn").disabled = true;
@@ -91,8 +81,7 @@ function play() {
 }
 
 function makeGuess() {
-  let input = document.getElementById("guess").value;
-  let num = parseInt(input);
+  let num = parseInt(document.getElementById("guess").value);
 
   if (isNaN(num)) {
     document.getElementById("msg").textContent = "Please enter a valid number!";
@@ -113,8 +102,11 @@ function makeGuess() {
 
   if (num === answer) {
     totalWins++;
+    totalWinGuesses += guessCount;
+
     document.getElementById("msg").textContent =
       "Correct! " + playerName + " got it in " + guessCount + " guesses!";
+
     updateScore(guessCount);
     updateTimers(new Date().getTime());
     reset();
@@ -133,14 +125,12 @@ function updateScore(score) {
 
   document.getElementById("wins").textContent = "Total wins: " + totalWins;
 
-  let totalScore = 0;
-  for (let i = 0; i < scores.length; i++) {
-    totalScore += scores[i];
+  if (totalWins > 0) {
+    document.getElementById("avgScore").textContent =
+      "Average Score: " + (totalWinGuesses / totalWins).toFixed(1);
+  } else {
+    document.getElementById("avgScore").textContent = "Average Score: 0";
   }
-
-  let avgScore = totalScore / scores.length;
-  document.getElementById("avgScore").textContent =
-    "Average Score: " + avgScore.toFixed(1);
 
   let leaderboard = document.getElementsByName("leaderboard");
   for (let i = 0; i < leaderboard.length; i++) {
@@ -185,10 +175,12 @@ function reset() {
 }
 
 function giveUp() {
+  guessCount = currentRange;
+
   document.getElementById("msg").textContent =
     "The answer was " + answer + ". Better luck next time!";
 
-  updateScore(currentRange);
+  updateScore(guessCount);
   updateTimers(new Date().getTime());
   reset();
 }
