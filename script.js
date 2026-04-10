@@ -175,13 +175,19 @@ function reset() {
 }
 
 function giveUp() {
-  guessCount = currentRange;
-
+  var endTime = new Date().getTime();
   document.getElementById("msg").textContent =
-    "The answer was " + answer + ". Better luck next time!";
+    "You gave up, " + playerName + ". The answer was " + answer + ". 😔";
 
-  updateScore(guessCount);
-  updateTimers(new Date().getTime());
+  wins++;
+  totalGuesses += range;
+  document.getElementById("wins").textContent = wins;
+  document.getElementById("avgScore").textContent = (totalGuesses / wins).toFixed(1);
+
+  scores.push(range);
+  scores.sort(function(a, b) { return a - b; });
+  setLeaderboard();
+  updateTimers(endTime);
   reset();
 }
 
