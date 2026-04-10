@@ -175,18 +175,11 @@ function reset() {
 }
 
 function giveUp() {
-  var endTime = new Date().getTime();
+  let endTime = new Date().getTime();
   document.getElementById("msg").textContent =
     "You gave up, " + playerName + ". The answer was " + answer + ". 😔";
 
-  wins++;
-  totalGuesses += range;
-  document.getElementById("wins").textContent = wins;
-  document.getElementById("avgScore").textContent = (totalGuesses / wins).toFixed(1);
-
-  scores.push(range);
-  scores.sort(function(a, b) { return a - b; });
-  setLeaderboard();
+  updateScore(currentRange);
   updateTimers(endTime);
   reset();
 }
