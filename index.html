@@ -3,33 +3,57 @@
   <head>
     <title>JavaScript Number Guessing Game</title>
     <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
   </head>
-  <body>
-    <p id="date"></p>
+<body>
 
-    <h3>Level</h3>
-    <input type="radio" name="level" id="e" value="3" checked><label for="e">Easy</label>
-    <input type="radio" name="level" id="m" value="10"><label for="m">Medium</label>
-    <input type="radio" name="level" id="h" value="100"><label for="h">Hard</label>
+  <div class="page">
 
-    <button id="playBtn">Play</button>
+    <div class="bubble">
+      <p id="date"></p>
+    </div>
 
-    <h3 id="msg">Select a Level</h3>
-    <input type="text" id="guess">
-    <button id="guessBtn" disabled>Guess</button>
-    <button id="giveUpBtn" disabled>Give Up</button>
+    <div class="row">
+      <div class="bubble">
+        <h3>Level</h3>
+        <input type="radio" name="level" id="e" value="3" checked><label for="e">Easy</label><br>
+        <input type="radio" name="level" id="m" value="10"><label for="m">Medium</label><br>
+        <input type="radio" name="level" id="h" value="100"><label for="h">Hard</label><br><br>
+        <button id="playBtn">Play</button>
+      </div>
 
-    <h3>Stats</h3>
-    <p id="wins">Total wins: 0</p>
-    <p id="avgScore">Average Score: </p>
-    <p id="fastest">Fastest Game: </p>
-    <p id="avgTime">Average Time: </p>
+      <div class="bubble message-box">
+        <h3 id="msg">Select a Level</h3>
+      </div>
+    </div>
 
-    <h3>Leaderboard</h3>
-    <ol>
-      <li name="leaderboard">0</li>
-      <li name="leaderboard">0</li>
-      <li name="leaderboard">0</li>
-    </ol>
-  </body>
+    <div class="row">
+      <div class="bubble">
+        <input type="text" id="guess" placeholder="Enter your guess"><br><br>
+        <button id="guessBtn" disabled>Guess</button>
+        <button id="giveUpBtn" disabled>Give Up</button>
+      </div>
+
+      <div class="bubble">
+        <h3>Stats</h3>
+        <p id="wins">Total wins: 0</p>
+        <p id="avgScore">Average Score: </p>
+        <p id="fastest">Fastest Game: </p>
+        <p id="avgTime">Average Time: </p>
+      </div>
+    </div>
+
+    <div class="bubble">
+      <h3>Leaderboard</h3>
+      <ol>
+        <li name="leaderboard">--</li>
+        <li name="leaderboard">--</li>
+        <li name="leaderboard">--</li>
+      </ol>
+    </div>
+
+  </div>
+</body>
+  <div id="confetti-container"></div>
+
 </html>

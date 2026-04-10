@@ -110,6 +110,7 @@ function makeGuess() {
     updateScore(guessCount);
     updateTimers(new Date().getTime());
     reset();
+      celebrateWin();
   } else if (num > answer) {
     document.getElementById("msg").textContent = "Too high. " + temp;
   } else {
@@ -187,3 +188,27 @@ function giveUp() {
 document.getElementById("playBtn").addEventListener("click", play);
 document.getElementById("guessBtn").addEventListener("click", makeGuess);
 document.getElementById("giveUpBtn").addEventListener("click", giveUp);
+
+
+
+// Confetti Effect
+
+function celebrateWin() {
+  let container = document.getElementById("confetti-container");
+
+  for (let i = 0; i < 30; i++) {
+    let piece = document.createElement("div");
+    piece.className = "confetti";
+
+    let colors = ["pink", "lavender", "lightblue", "gold", "white"];
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.left = Math.random() * window.innerWidth + "px";
+    piece.style.top = "-20px";
+
+    container.appendChild(piece);
+
+    setTimeout(function () {
+      piece.remove();
+    }, 2000);
+  }
+}
